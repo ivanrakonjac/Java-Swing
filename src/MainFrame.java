@@ -17,6 +17,13 @@ public class MainFrame extends JFrame {
         button = new JButton("Click me");
         formPanel = new FormPanel();
 
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                textPanel.appendText("Hello\n");
+            }
+        });
+
         add(formPanel,BorderLayout.WEST);
         add(textPanel,BorderLayout.CENTER);
         add(button, BorderLayout.SOUTH);
