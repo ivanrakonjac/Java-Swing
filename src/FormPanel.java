@@ -13,6 +13,7 @@ public class FormPanel extends JPanel {
     private JButton okBtn;
     private FormListener formListener;
     private JList ageList;
+    private JComboBox empCombo;
 
     public FormPanel(){
         Dimension dim = getPreferredSize();
@@ -25,7 +26,9 @@ public class FormPanel extends JPanel {
         nameFiled = new JTextField(10);
         occupationField = new JTextField(10);
         ageList = new JList();
+        empCombo = new JComboBox();
 
+        //Set up list box
         DefaultListModel ageModel = new DefaultListModel();
         ageModel.addElement(new AgeCategory(0,"Under 18"));
         ageModel.addElement(new AgeCategory(1,"18 to 65"));
@@ -36,6 +39,14 @@ public class FormPanel extends JPanel {
         ageList.setBorder(BorderFactory.createEtchedBorder());
         ageList.setSelectedIndex(1);
 
+        //Set up combo box
+        DefaultComboBoxModel empModel = new DefaultComboBoxModel();
+        empModel.addElement("employed");
+        empModel.addElement("self-employed");
+        empModel.addElement("unemployed");
+        empCombo.setModel(empModel);
+        empCombo.setSelectedIndex(0);
+
         okBtn = new JButton("OK");
 
         //Kako proslediti text unet u FormPanelu, nakon pritiska dugmeta, u MainFrame => odgovor na kraju fajla
@@ -45,8 +56,11 @@ public class FormPanel extends JPanel {
                 String name = nameFiled.getText();
                 String occupation = occupationField.getText();
                 AgeCategory ageCat = (AgeCategory)ageList.getSelectedValue();
+                String empCat = (String)empCombo.getSelectedItem();
 
-                FormEvent ev = new FormEvent(this,name,occupation,ageCat.getId());
+                System.out.println(empCat);
+
+                FormEvent ev = new FormEvent(this,name,occupation,ageCat.getId(),empCat);
 
                 if(formListener!=null){
                     formListener.formEventOccured(ev);
@@ -58,17 +72,22 @@ public class FormPanel extends JPanel {
         Border outefBorder = BorderFactory.createEmptyBorder(5,5,5,5);
         setBorder(BorderFactory.createCompoundBorder(outefBorder,innerBorder));
 
+       layoutComponents();
+
+    };
+
+    public void layoutComponents(){
         setLayout(new GridBagLayout());
 
         GridBagConstraints gc = new GridBagConstraints();
 
         //FIRST row ---------------------
+        gc.gridy = 0;
 
         gc.weightx = 1;
         gc.weighty = 0.1;
 
         gc.gridx = 0;
-        gc.gridy = 0;
 
         gc.fill = GridBagConstraints.NONE;
         gc.insets = new Insets(0,0,0,5);
@@ -83,12 +102,12 @@ public class FormPanel extends JPanel {
         add(nameFiled,gc);
 
         //SECOND row ----------------------
+        gc.gridy++;
 
         gc.weightx = 1;
         gc.weighty = 0.1;
 
         gc.gridx = 0;
-        gc.gridy = 1;
 
         gc.insets = new Insets(0,0,0,5);
 
@@ -102,26 +121,44 @@ public class FormPanel extends JPanel {
         add(occupationField,gc);
 
         //Third row-------------------------
+        gc.gridy++;
 
         gc.weightx = 1;
         gc.weighty = 0.2;
 
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.FIRST_LINE_END;
+        add(new JLabel("Age: "), gc);
+
         gc.gridx=1;
-        gc.gridy=2;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
         add(ageList, gc);
 
         //Fourth row -----------------------
+        gc.gridy++;
+
+        gc.weightx = 1;
+        gc.weighty = 0.2;
+
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.FIRST_LINE_END;
+        add(new JLabel("Employement: "), gc);
+
+        gc.gridx=1;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(empCombo, gc);
+
+        //Fifth row -----------------------
+        gc.gridy++;
 
         gc.weightx = 1;
         gc.weighty = 2.0;
 
         gc.gridx=1;
-        gc.gridy=3;
 
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
         add(okBtn, gc);
-
-    };
+    }
 
     public void setFormListener(FormListener listener){
         this.formListener=listener;
