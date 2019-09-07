@@ -24,6 +24,16 @@ public class MainFrame extends JFrame {
             }
         });
 
+        //dodajem listener koji slusa FormEvent
+        formPanel.setFormListener(new FormListener() {
+            public void formEventOccured(FormEvent e) {
+                String name = e.getName();
+                String occupation = e.getOccupation();
+
+                textPanel.appendText(name + " :" + occupation + "\n");
+            }
+        });
+
         add(formPanel,BorderLayout.WEST);
         add(textPanel,BorderLayout.CENTER);
         add(button, BorderLayout.SOUTH);

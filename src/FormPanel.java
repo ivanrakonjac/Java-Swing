@@ -11,6 +11,7 @@ public class FormPanel extends JPanel {
     private JTextField nameFiled;
     private JTextField occupationField;
     private JButton okBtn;
+    private FormListener formListener;
 
     public FormPanel(){
         Dimension dim = getPreferredSize();
@@ -25,6 +26,7 @@ public class FormPanel extends JPanel {
 
         okBtn = new JButton("OK");
 
+        //Kako proslediti text unet u FormPanelu, nakon pritiska dugmeta, u MainFrame => odgovor na kraju fajla
         okBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -32,6 +34,10 @@ public class FormPanel extends JPanel {
                 String occupation = occupationField.getText();
 
                 FormEvent ev = new FormEvent(this,name,occupation);
+
+                if(formListener!=null){
+                    formListener.formEventOccured(ev);
+                }
             }
         });
 
@@ -95,4 +101,38 @@ public class FormPanel extends JPanel {
 
     };
 
+    public void setFormListener(FormListener listener){
+        this.formListener=listener;
+    }
+
 }
+
+/*
+Odgovor na pitanje: Kako proslediti text unet u FormPanelu, nakon pritiska dugmeta, u MainFrame => odgovor na kraju fajla?
+
+To se elegantno moze uraditi kreiranjem FrameEvent klase koja extenduje Event Java klasu, gde se na pritisak dugmeta kreira novi objekat klase FormEvent.
+Dodacemo joj jos parametre koji nama trebaju a to su ime i zanimanje.
+Kao i svaki dogadjaj, da bi imao smisla, treba postojati neki listener za njega.
+Taj listener cemo dodati u MainFrame-u.
+Da bi smo ga dodali moramo ga prvo napraviti, pa kreiramo interfejs FormListener koji extenduje EventListener java klasu.
+Interfejs ima samo jednu funkciju public void formEventOccured(FormEvent e), pomocu koje se moze definisati sta treba da se odradi kada dodje do FormEventa.
+Mogucnost kreiranja listenera za FormEvent pruzamo kroz funkciju klase FormPanel -> setListenr(FormListener listener).
+
+Tako da iz MainFrame-a pozivamo sledeci kod:
+
+formPanel.setFormListener(new FormListener() {
+    public void formEventOccured(FormEvent e) {
+        String name = e.getName();
+        String occupation = e.getOccupation();
+
+        textPanel.appendText(name + " :" + occupation + "\n");
+    }
+});
+
+-setujemo novi FormListener
+-u formEventOccured definisemo sta treba da se desi
+
+i tako elegantno dobijamo interakciju 2 klase
+
+ */
+
