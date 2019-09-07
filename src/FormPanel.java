@@ -12,6 +12,7 @@ public class FormPanel extends JPanel {
     private JTextField occupationField;
     private JButton okBtn;
     private FormListener formListener;
+    private JList ageList;
 
     public FormPanel(){
         Dimension dim = getPreferredSize();
@@ -23,6 +24,17 @@ public class FormPanel extends JPanel {
         occupationlabel = new JLabel("Occupation: ");
         nameFiled = new JTextField(10);
         occupationField = new JTextField(10);
+        ageList = new JList();
+
+        DefaultListModel ageModel = new DefaultListModel();
+        ageModel.addElement(new AgeCategory(0,"Under 18"));
+        ageModel.addElement(new AgeCategory(1,"18 to 65"));
+        ageModel.addElement(new AgeCategory(2,"over 65"));
+        ageList.setModel(ageModel);
+
+        ageList.setPreferredSize(new Dimension(110,66));
+        ageList.setBorder(BorderFactory.createEtchedBorder());
+        ageList.setSelectedIndex(1);
 
         okBtn = new JButton("OK");
 
@@ -32,8 +44,9 @@ public class FormPanel extends JPanel {
             public void actionPerformed(ActionEvent actionEvent) {
                 String name = nameFiled.getText();
                 String occupation = occupationField.getText();
+                AgeCategory ageCat = (AgeCategory)ageList.getSelectedValue();
 
-                FormEvent ev = new FormEvent(this,name,occupation);
+                FormEvent ev = new FormEvent(this,name,occupation,ageCat.getId());
 
                 if(formListener!=null){
                     formListener.formEventOccured(ev);
@@ -88,13 +101,22 @@ public class FormPanel extends JPanel {
         gc.anchor = GridBagConstraints.LINE_START;
         add(occupationField,gc);
 
-        //THIRD row -----------------------
+        //Third row-------------------------
+
+        gc.weightx = 1;
+        gc.weighty = 0.2;
+
+        gc.gridx=1;
+        gc.gridy=2;
+        add(ageList, gc);
+
+        //Fourth row -----------------------
 
         gc.weightx = 1;
         gc.weighty = 2.0;
 
         gc.gridx=1;
-        gc.gridy=2;
+        gc.gridy=3;
 
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
         add(okBtn, gc);
@@ -106,6 +128,26 @@ public class FormPanel extends JPanel {
     }
 
 }
+
+class AgeCategory{
+    private String text;
+    private int id;
+
+    public AgeCategory(int id, String text){
+        this.id=id;
+        this.text=text;
+    }
+
+    public String toString(){
+        return text;
+    }
+
+    public int getId(){
+        return id;
+    }
+}
+
+
 
 /*
 Odgovor na pitanje: Kako proslediti text unet u FormPanelu, nakon pritiska dugmeta, u MainFrame => odgovor na kraju fajla?

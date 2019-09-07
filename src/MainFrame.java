@@ -29,8 +29,9 @@ public class MainFrame extends JFrame {
             public void formEventOccured(FormEvent e) {
                 String name = e.getName();
                 String occupation = e.getOccupation();
+                int ageCat = e.getAgeCat();
 
-                textPanel.appendText(name + " :" + occupation + "\n");
+                textPanel.appendText(name + " :" + occupation + " " +ageCat + "\n");
             }
         });
 
