@@ -17,6 +17,9 @@ public class MainFrame extends JFrame {
         button = new JButton("Click me");
         formPanel = new FormPanel();
 
+        //Dodavanje menija
+        setJMenuBar(createMenuBar());
+
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -49,5 +52,50 @@ public class MainFrame extends JFrame {
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    private JMenuBar createMenuBar(){
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        JMenu windowMenu = new JMenu("Window");
+
+        JMenuItem exportData = new JMenuItem("Export data");
+        JMenuItem importData = new JMenuItem("Import data");
+        JMenuItem save = new JMenuItem("Save");
+
+        fileMenu.add(exportData);
+        fileMenu.add(importData);
+        fileMenu.add(save);
+
+        JMenu showMenu = new JMenu("Show");
+        JMenuItem showItem = new JMenuItem("Show item");
+        showMenu.add(showItem);
+        windowMenu.add(showMenu);
+
+        JMenu helpMenu = new JMenu("Help");
+        JCheckBoxMenuItem helpItem = new JCheckBoxMenuItem("Call for help");
+        helpMenu.add(helpItem);
+        windowMenu.add(helpMenu);
+
+        //Dodavanje listenera
+        exportData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("Export data");
+            }
+        });
+
+        importData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                System.out.println("Import data");
+            }
+        });
+
+
+        menuBar.add(fileMenu);
+        menuBar.add(windowMenu);
+        return menuBar;
     }
 }
