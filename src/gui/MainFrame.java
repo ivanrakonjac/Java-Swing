@@ -1,4 +1,6 @@
-import javafx.stage.FileChooser;
+package gui;
+
+import controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +12,9 @@ public class MainFrame extends JFrame {
     private JButton button;
     private FormPanel formPanel;
     private JFileChooser fileChooser;
+    private TablePanel tablePanel;
+
+    private Controller controller; //MainFrame zove kontroler kada zeli da doda nesto u bazu
 
     public MainFrame(){
         super("Hello World!");
@@ -20,6 +25,11 @@ public class MainFrame extends JFrame {
         button = new JButton("Click me");
         formPanel = new FormPanel();
         fileChooser = new JFileChooser();
+        tablePanel = new TablePanel();
+
+        controller = new Controller();
+
+        tablePanel.setData(controller.getPeople());
 
         //Dodavanje menija
         setJMenuBar(createMenuBar());
@@ -31,25 +41,16 @@ public class MainFrame extends JFrame {
             }
         });
 
-        //dodajem listener koji slusa FormEvent
+        //dodajem listener koji slusa gui.FormEvent
         formPanel.setFormListener(new FormListener() {
             public void formEventOccured(FormEvent e) {
-                String name = e.getName();
-                String occupation = e.getOccupation();
-                int ageCat = e.getAgeCat();
-                String empolyeeCategory = e.getEmpCat();
-                String taxId = e.getTaxId();
-                boolean usCitizen = e.isUsCitizen();
-                String gender = e.getGender();
-
-                if(usCitizen==false) taxId="non defined";
-
-                textPanel.appendText(name + " : " + occupation + " " +ageCat + " " + empolyeeCategory +" "+ taxId+" " + usCitizen + " " + gender + "\n");
+                controller.addPerson(e);
+                tablePanel.refresh();
             }
         });
 
         add(formPanel,BorderLayout.WEST);
-        add(textPanel,BorderLayout.CENTER);
+        add(tablePanel,BorderLayout.CENTER);
         add(button, BorderLayout.SOUTH);
 
 
