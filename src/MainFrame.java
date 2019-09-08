@@ -1,3 +1,5 @@
+import javafx.stage.FileChooser;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -7,6 +9,7 @@ public class MainFrame extends JFrame {
     private TextPanel textPanel;
     private JButton button;
     private FormPanel formPanel;
+    private JFileChooser fileChooser;
 
     public MainFrame(){
         super("Hello World!");
@@ -16,6 +19,7 @@ public class MainFrame extends JFrame {
         textPanel = new TextPanel();
         button = new JButton("Click me");
         formPanel = new FormPanel();
+        fileChooser = new JFileChooser();
 
         //Dodavanje menija
         setJMenuBar(createMenuBar());
@@ -63,10 +67,12 @@ public class MainFrame extends JFrame {
         JMenuItem exportData = new JMenuItem("Export data");
         JMenuItem importData = new JMenuItem("Import data");
         JMenuItem save = new JMenuItem("Save");
+        JMenuItem exit = new JMenuItem("Exit");
 
         fileMenu.add(exportData);
         fileMenu.add(importData);
         fileMenu.add(save);
+        fileMenu.add(exit);
 
         JMenu showMenu = new JMenu("Show");
         JMenuItem showItem = new JMenuItem("Show item");
@@ -93,6 +99,24 @@ public class MainFrame extends JFrame {
             }
         });
 
+        exit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int action = JOptionPane.showConfirmDialog(MainFrame.this,"Do you really want to exit the application?","Confirm exit",JOptionPane.OK_CANCEL_OPTION);
+                if(action == JOptionPane.OK_OPTION){
+                    System.exit(0);
+                }
+            }
+        });
+
+        importData.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(fileChooser.showOpenDialog(MainFrame.this) == JFileChooser.APPROVE_OPTION){
+                    System.out.println(fileChooser.getSelectedFile());
+                }
+            }
+        });
 
         menuBar.add(fileMenu);
         menuBar.add(windowMenu);
